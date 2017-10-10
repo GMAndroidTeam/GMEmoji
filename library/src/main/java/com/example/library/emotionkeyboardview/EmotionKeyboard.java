@@ -150,6 +150,7 @@ public class EmotionKeyboard {
 	        return false;
 	    }
 
+
 	    private void showEmotionLayout() {
 	        int softInputHeight = getSupportSoftInputHeight();
 	        if (softInputHeight == 0) {
