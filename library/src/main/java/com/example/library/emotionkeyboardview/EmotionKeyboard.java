@@ -105,13 +105,13 @@ public class EmotionKeyboard {
 						lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
 						hideEmotionLayout(true);//隐藏表情布局，显示软件盘
 						unlockContentHeightDelayed();//软件盘显示后，释放内容高度
-						emotionButton.setImageResource(keyboradImage);
+						emotionButton.setImageResource(emojiImage);
 					} else {
 						if (isSoftInputShown()) {//同上
 							lockContentHeight();
 							showEmotionLayout();
 							unlockContentHeightDelayed();
-							emotionButton.setImageResource(keyboradImage);
+							emotionButton.setImageResource(emojiImage);
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
