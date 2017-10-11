@@ -86,44 +86,31 @@ public class EmotiomComplateFragment extends BaseFragment {
 
     /**
      * 初始化表情面板
-     * 思路：获取表情的总数，按每行存放9个表情，动态计算出每个表情所占的宽度大小（包含间距），
-     * 而每个表情的高与宽应该是相等的，这里我们约定只存放3行
-     * 每个面板最多存放9*3=27个表情，再减去一个删除键，即每个面板包含26个表情
-     * 根据表情总数，循环创建多个容量为26的List，存放表情，对于大小不满26进行特殊处理即可。
+     * 思路：获取表情的总数，按每行存放7个表情，每个表情的大小写死(现在是25dp)，
+     * 而每个表情的高与宽应该是相等的，这里我们约定只存放4行
+     * 每个面板最多存放7*4=28个表情，再减去一个删除键，即每个面板包含27个表情
+     * 根据表情总数，循环创建多个容量为27的List，存放表情，对于大小不满27进行特殊处理即可。
      */
     private void initEmotion() {
-        // 获取屏幕宽度
-        int screenWidth = DisplayUtils.getScreenWidthPixels(getActivity());
-        // item的左右间距
-        int horizontalSpacing = DisplayUtils.dp2px(getActivity(), 15);
         // item的上下间距
-        int verticalSpacing = DisplayUtils.dp2px(getActivity(), 21);
-        // 左右margin总和
-        int marginHorizontalTotal = DisplayUtils.dp2px(getActivity(), 24) * 2;
-        // 上下margin总和
-        int marginVerticalTotal = DisplayUtils.dp2px(getActivity(), 24) + DisplayUtils.dp2px(getActivity(), 11);
-        // 动态计算item的宽度和高度
-        int itemWidth = (screenWidth - horizontalSpacing * 8 - marginHorizontalTotal ) / 9;
-        //动态计算gridview的总高度
-        int gvHeight = itemWidth * 3 + verticalSpacing * 2 + marginVerticalTotal;
-
+        int verticalSpacing = DisplayUtils.dp2px(getActivity(), 30);
         List<GridView> emotionViews = new ArrayList<>();
         List<String> emotionNames = new ArrayList<>();
         // 遍历所有的表情的key
         for (String emojiName : EmotionUtils.getEmojiMap(emotion_map_type).keySet()) {
             emotionNames.add(emojiName);
             // 每20个表情作为一组,同时添加到ViewPager对应的view集合中
-            if (emotionNames.size() == 26) {
-                GridView gv = createEmotionGridView(emotionNames, screenWidth, horizontalSpacing, verticalSpacing, itemWidth, gvHeight);
+            if (emotionNames.size() == 27) {
+                GridView gv = createEmotionGridView(emotionNames, verticalSpacing);
                 emotionViews.add(gv);
                 // 添加完一组表情,重新创建一个表情名字集合
                 emotionNames = new ArrayList<>();
             }
         }
 
-        // 判断最后是否有不足20个表情的剩余情况
+        // 判断最后是否有不足27个表情的剩余情况
         if (emotionNames.size() > 0) {
-            GridView gv = createEmotionGridView(emotionNames, screenWidth, horizontalSpacing, verticalSpacing, itemWidth, gvHeight);
+            GridView gv = createEmotionGridView(emotionNames, verticalSpacing);
             emotionViews.add(gv);
         }
 
@@ -132,7 +119,7 @@ public class EmotiomComplateFragment extends BaseFragment {
         // 将多个GridView添加显示到ViewPager中
         emotionPagerGvAdapter = new EmotionPagerAdapter(emotionViews);
         vp_complate_emotion_layout.setAdapter(emotionPagerGvAdapter);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(screenWidth, gvHeight);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         vp_complate_emotion_layout.setLayoutParams(params);
 
 
@@ -141,21 +128,21 @@ public class EmotiomComplateFragment extends BaseFragment {
     /**
      * 创建显示表情的GridView
      */
-    private GridView createEmotionGridView(List<String> emotionNames, int gvWidth, int horizontalSpacing, int verticalSpacing, int itemWidth, int gvHeight) {
+    private GridView createEmotionGridView(List<String> emotionNames, int verticalSpacing) {
         // 创建GridView
         GridView gv = new GridView(getActivity());
         //设置点击背景透明
         gv.setSelector(android.R.color.transparent);
-        //设置9列
-        gv.setNumColumns(9);
-        gv.setPadding(DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 11));
-        gv.setHorizontalSpacing(horizontalSpacing);
+        //设置7列
+        gv.setNumColumns(7);
+        gv.setPadding(0, DisplayUtils.dp2px(getActivity(), 24), 0, DisplayUtils.dp2px(getActivity(), 11));
+//        gv.setHorizontalSpacing(horizontalSpacing);
         gv.setVerticalSpacing(verticalSpacing);
         //设置GridView的宽高
-        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(gvWidth, gvHeight);
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         gv.setLayoutParams(params);
         // 给GridView设置表情图片
-        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, itemWidth, emotion_map_type);
+        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type);
         gv.setAdapter(adapter);
         //设置全局点击事件
         gv.setOnItemClickListener(GlobalOnItemClickManagerUtils.getInstance(getActivity()).getOnItemClickListener(emotion_map_type));

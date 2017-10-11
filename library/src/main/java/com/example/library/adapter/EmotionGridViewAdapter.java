@@ -1,9 +1,9 @@
 package com.example.library.adapter;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
@@ -22,13 +22,11 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 
 	private Context      context;
 	private List<String> emotionNames;
-	private int          itemWidth;
 	private int          emotion_map_type;
 
-	public EmotionGridViewAdapter(Context context, List<String> emotionNames, int itemWidth, int emotion_map_type) {
+	public EmotionGridViewAdapter(Context context, List<String> emotionNames,int emotion_map_type) {
 		this.context = context;
 		this.emotionNames = emotionNames;
-		this.itemWidth = itemWidth;
 		this.emotion_map_type = emotion_map_type;
 	}
 
@@ -50,21 +48,32 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ImageView iv_emotion = new ImageView(context);
-		// 设置内边距
-		//        iv_emotion.setPadding(itemWidth / 8, itemWidth / 8, itemWidth / 8, itemWidth / 8);
-		LayoutParams params = new LayoutParams(itemWidth, itemWidth);
-		iv_emotion.setLayoutParams(params);
+		ViewHolder viewHolder = null;
+
+		if (convertView == null) {
+
+			viewHolder = new ViewHolder();
+			convertView = LayoutInflater.from(this.context).inflate(R.layout.griditem_emoji, null);
+
+			viewHolder.iv_emoji = (ImageView) convertView.findViewById(R.id.iv_emoji);
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) convertView.getTag();
+		}
 
 		//判断是否为最后一个item
 		if (position == getCount() - 1) {
-			iv_emotion.setImageResource(R.drawable.compose_emotion_delete);
+			viewHolder.iv_emoji.setImageResource(R.drawable.compose_emotion_delete);
 		} else {
 			String emotionName = emotionNames.get(position);
-			iv_emotion.setImageResource(EmotionUtils.getImgByName(emotion_map_type, emotionName));
+			viewHolder.iv_emoji.setImageResource(EmotionUtils.getImgByName(emotion_map_type, emotionName));
 		}
 
-		return iv_emotion;
+		return convertView;
+	}
+
+	class ViewHolder {
+		public ImageView iv_emoji;
 	}
 
 }

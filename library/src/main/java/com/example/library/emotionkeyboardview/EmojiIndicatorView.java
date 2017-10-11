@@ -2,7 +2,8 @@ package com.example.library.emotionkeyboardview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.library.R;
@@ -19,10 +20,8 @@ import java.util.ArrayList;
 public class EmojiIndicatorView extends LinearLayout {
 
     private Context         mContext;
-    private ArrayList<View> mImageViews;//所有指示器集合
-    private int size       = 8;
-    private int marginSize = 8;
-    private int pointSize;//指示器的大小
+    private ArrayList<ImageView> mImageViews;//所有指示器集合
+    private int marginSize = 12;
     private int marginLeft;//间距
 
     public EmojiIndicatorView(Context context) {
@@ -36,7 +35,6 @@ public class EmojiIndicatorView extends LinearLayout {
     public EmojiIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext = context;
-        pointSize = DisplayUtils.dp2px(context, size);
         marginLeft = DisplayUtils.dp2px(context, marginSize);
     }
 
@@ -50,15 +48,16 @@ public class EmojiIndicatorView extends LinearLayout {
         this.removeAllViews();
         LinearLayout.LayoutParams lp;
         for (int i = 0; i < count; i++) {
-            View v = new View(mContext);
-            lp = new LinearLayout.LayoutParams(pointSize, pointSize);
+            ImageView v = new ImageView(mContext);
+            lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             if (i != 0)
                 lp.leftMargin = marginLeft;
             v.setLayoutParams(lp);
             if (i == 0) {
-                v.setBackgroundResource(R.drawable.shape_bg_indicator_point_select);
+                v.setImageResource(R.drawable.bg_point_indicator_selected);
+
             } else {
-                v.setBackgroundResource(R.drawable.shape_bg_indicator_point_nomal);
+                v.setImageResource(R.drawable.bg_point_indicator_unselected);
             }
             mImageViews.add(v);
             this.addView(v);
@@ -72,10 +71,9 @@ public class EmojiIndicatorView extends LinearLayout {
         if (startPosition < 0 || nextPosition < 0 || nextPosition == startPosition) {
             startPosition = nextPosition = 0;
         }
-        final View ViewStrat = mImageViews.get(startPosition);
-        final View ViewNext = mImageViews.get(nextPosition);
-        ViewNext.setBackgroundResource(R.drawable.shape_bg_indicator_point_select);
-        ViewStrat.setBackgroundResource(R.drawable.shape_bg_indicator_point_nomal);
+        final ImageView ViewStrat = mImageViews.get(startPosition);
+        final ImageView ViewNext = mImageViews.get(nextPosition);
+        ViewNext.setImageResource(R.drawable.bg_point_indicator_selected);
+        ViewStrat.setImageResource(R.drawable.bg_point_indicator_unselected);
     }
-
 }

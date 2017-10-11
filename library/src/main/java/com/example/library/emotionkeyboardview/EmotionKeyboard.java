@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.example.library.utils.LogUtils;
@@ -96,7 +97,7 @@ public class EmotionKeyboard {
 	     * @param emotionButton
 	     * @return
 	     */
-	    public EmotionKeyboard bindToEmotionButton(View emotionButton) {
+	    public EmotionKeyboard bindToEmotionButton(final ImageView emotionButton, final int emojiImage, final int keyboradImage) {
 	        emotionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -104,13 +105,16 @@ public class EmotionKeyboard {
 						lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
 						hideEmotionLayout(true);//隐藏表情布局，显示软件盘
 						unlockContentHeightDelayed();//软件盘显示后，释放内容高度
+						emotionButton.setImageResource(keyboradImage);
 					} else {
 						if (isSoftInputShown()) {//同上
 							lockContentHeight();
 							showEmotionLayout();
 							unlockContentHeightDelayed();
+							emotionButton.setImageResource(keyboradImage);
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
+							emotionButton.setImageResource(keyboradImage);
 						}
 					}
 				}
