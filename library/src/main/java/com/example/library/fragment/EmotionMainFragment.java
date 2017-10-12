@@ -87,7 +87,7 @@ public class EmotionMainFragment extends BaseFragment {
                 .setEmotionView(rootView.findViewById(R.id.ll_emotion_layout))//绑定表情面板
                 .bindToContent(contentView)//绑定内容view
                 .bindToEditText(!isBindToBarEditText ? ((EditText) contentView) : ((EditText) rootView.findViewById(R.id.bar_edit_text)))//判断绑定那种EditView
-                .bindToEmotionButton((ImageView) rootView.findViewById(R.id.emotion_button), R.drawable.emoji_1f60a, R.drawable.emoji_1f60b, null, 0)//绑定表情按钮
+                .bindToEmotionButton((ImageView) rootView.findViewById(R.id.emotion_button), R.drawable.emoji_1f60a, R.drawable.emoji_1f60b)//绑定表情按钮
                 .build();
         initListener();
         initDatas();
