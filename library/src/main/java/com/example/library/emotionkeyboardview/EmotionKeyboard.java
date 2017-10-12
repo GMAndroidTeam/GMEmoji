@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.library.utils.LogUtils;
 
@@ -97,10 +98,11 @@ public class EmotionKeyboard {
 	     * @param emotionButton
 	     * @return
 	     */
-	    public EmotionKeyboard bindToEmotionButton(final ImageView emotionButton, final int emojiImage, final int keyboradImage) {
+	    public EmotionKeyboard bindToEmotionButton(final ImageView emotionButton, final int emojiImage, final int keyboradImage, final LinearLayout llBottom, final int imojiId) {
 	        emotionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+
 					if (mEmotionLayout.isShown()) {
 						lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
 						hideEmotionLayout(true);//隐藏表情布局，显示软件盘
@@ -115,6 +117,7 @@ public class EmotionKeyboard {
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
+							((RelativeLayout.LayoutParams)(llBottom.getLayoutParams())).addRule(RelativeLayout.ABOVE, imojiId);
 						}
 					}
 				}
