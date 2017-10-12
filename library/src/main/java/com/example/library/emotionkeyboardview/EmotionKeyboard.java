@@ -98,7 +98,7 @@ public class EmotionKeyboard {
 	     * @param emotionButton
 	     * @return
 	     */
-	    public EmotionKeyboard bindToEmotionButton(final ImageView emotionButton, final int emojiImage, final int keyboradImage, final LinearLayout llBottom, final int imojiId) {
+	    public EmotionKeyboard bindToEmotionButton(final ImageView emotionButton, final int emojiImage, final int keyboradImage, final LinearLayout llBottom, final int emojiId) {
 	        emotionButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -117,7 +117,9 @@ public class EmotionKeyboard {
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
-							((RelativeLayout.LayoutParams)(llBottom.getLayoutParams())).addRule(RelativeLayout.ABOVE, imojiId);
+							if (null != llBottom && emojiId != 0){
+								((RelativeLayout.LayoutParams)(llBottom.getLayoutParams())).addRule(RelativeLayout.ABOVE, emojiId);
+							}
 						}
 					}
 				}
