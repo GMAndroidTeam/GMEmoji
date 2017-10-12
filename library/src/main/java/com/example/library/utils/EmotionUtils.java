@@ -2,6 +2,8 @@
 package com.example.library.utils;
 
 
+import android.util.Log;
+
 import com.example.library.R;
 
 import java.util.LinkedHashMap;
@@ -87,7 +89,7 @@ public class EmotionUtils {
 				integer = EMOTION_CLASSIC_MAP.get(imgName);
 				break;
 			default:
-				LogUtils.e("the emojiMap is null!! Handle Yourself ");
+				Log.e("gengmei", "the emojiMap is null!! Handle Yourself");
 				break;
 		}
 		return integer == null ? -1 : integer;

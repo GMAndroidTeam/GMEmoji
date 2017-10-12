@@ -2,14 +2,15 @@ package com.example.library.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.library.R;
 import com.example.library.model.ImageModel;
-import com.example.library.utils.ScreenUtils;
 
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class HorizontalRecyclerviewAdapter extends RecyclerView.Adapter<Horizont
         /**
          * 动态计算底部tab的宽度。
          */
-        int width= ScreenUtils.getScreenWidth(context);
+        int width= getScreenWidth(context);
         float itemW=width/6;
         ViewGroup.LayoutParams lp=  holder.imageBtn.getLayoutParams();
         lp.width= (int) itemW;
@@ -85,6 +86,21 @@ public class HorizontalRecyclerviewAdapter extends RecyclerView.Adapter<Horizont
             holder.imageBtn.setBackgroundColor(context.getResources().getColor(R.color.bg_horizontal_btn_normal));
         }
 
+    }
+
+    /**
+     * 获得屏幕宽度
+     *
+     * @param context
+     * @return
+     */
+    private int getScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context
+                .getSystemService(Context.WINDOW_SERVICE);
+
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        wm.getDefaultDisplay().getMetrics(outMetrics);//将当前窗口的信息放在DisplayMetrics类中
+        return outMetrics.widthPixels;
     }
 
     @Override
