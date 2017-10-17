@@ -97,6 +97,7 @@ public class EmotionMainFragment extends BaseFragment {
         initDatas();
         //创建全局监听
         GlobalOnItemClickManagerUtils globalOnItemClickManager = GlobalOnItemClickManagerUtils.getInstance(getActivity());
+        globalOnItemClickManager.attachToEditText(bar_edit_text);
 
         if (isBindToBarEditText) {
             //绑定当前Bar的编辑框

@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 /**
  * author : zejian
@@ -36,6 +35,7 @@ public class EmotionKeyboard {
 	    private EditText mEditText;//
 	    private View mContentView;//内容布局view,即除了表情布局或者软键盘布局以外的布局，用于固定bar的高度，防止跳闪
 
+		public boolean isInputMethodOpen = false;//软件盘是否打开
 	    private EmotionKeyboard(){
 
 	    }
@@ -106,18 +106,18 @@ public class EmotionKeyboard {
 						hideEmotionLayout(true);//隐藏表情布局，显示软件盘
 						unlockContentHeightDelayed();//软件盘显示后，释放内容高度
 						emotionButton.setImageResource(emojiImage);
-						Toast.makeText(mActivity,"显示软键盘1", Toast.LENGTH_SHORT).show();
+//						Toast.makeText(mActivity,"显示软键盘1", Toast.LENGTH_SHORT).show();
 					} else {
 						if (isSoftInputShown()) {//同上
 							lockContentHeight();
 							showEmotionLayout();
 							unlockContentHeightDelayed();
 							emotionButton.setImageResource(keyboradImage);
-							Toast.makeText(mActivity,"显示表情1", Toast.LENGTH_SHORT).show();
+//							Toast.makeText(mActivity,"显示表情1", Toast.LENGTH_SHORT).show();
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
-							Toast.makeText(mActivity,"显示表情2", Toast.LENGTH_SHORT).show();
+//							Toast.makeText(mActivity,"显示表情2", Toast.LENGTH_SHORT).show();
 						}
 					}
 				}
@@ -177,8 +177,10 @@ public class EmotionKeyboard {
 	            mEmotionLayout.setVisibility(View.GONE);
 	            if (showSoftInput) {
 	                showSoftInput();
+					isInputMethodOpen = true;
 	            }
-	        }
+				isInputMethodOpen = false;
+			}
 	    }
 
 	    /**
