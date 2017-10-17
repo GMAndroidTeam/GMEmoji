@@ -8,9 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import com.example.library.fragment.EmotionMainFragment;
-
-
 /**
  * Created by zejian
  * Time  16/1/11 下午4:17

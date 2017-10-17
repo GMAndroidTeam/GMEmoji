@@ -1,4 +1,4 @@
-package com.example.library.fragment;
+package com.example.wangjinlong.gmemoji;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,6 +17,10 @@ import com.example.library.adapter.HorizontalRecyclerviewAdapter;
 import com.example.library.adapter.NoHorizontalScrollerVPAdapter;
 import com.example.library.emotionkeyboardview.EmotionKeyboard;
 import com.example.library.emotionkeyboardview.NoHorizontalScrollerViewPager;
+import com.example.library.fragment.BaseFragment;
+import com.example.library.fragment.EmotiomComplateFragment;
+import com.example.library.fragment.Fragment1;
+import com.example.library.fragment.FragmentFactory;
 import com.example.library.model.ImageModel;
 import com.example.library.utils.EmotionUtils;
 import com.example.library.utils.GlobalOnItemClickManagerUtils;

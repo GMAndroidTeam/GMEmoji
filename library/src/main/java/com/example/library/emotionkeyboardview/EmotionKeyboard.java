@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 /**
  * author : zejian
@@ -69,7 +70,6 @@ public class EmotionKeyboard {
 	     */
 	    public EmotionKeyboard bindToEditText(EditText editText) {
 	        mEditText = editText;
-	        mEditText.requestFocus();
 	        mEditText.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 	            public boolean onTouch(View v, MotionEvent event) {
@@ -106,15 +106,18 @@ public class EmotionKeyboard {
 						hideEmotionLayout(true);//隐藏表情布局，显示软件盘
 						unlockContentHeightDelayed();//软件盘显示后，释放内容高度
 						emotionButton.setImageResource(emojiImage);
+						Toast.makeText(mActivity,"显示软键盘1", Toast.LENGTH_SHORT).show();
 					} else {
 						if (isSoftInputShown()) {//同上
 							lockContentHeight();
 							showEmotionLayout();
 							unlockContentHeightDelayed();
-							emotionButton.setImageResource(emojiImage);
+							emotionButton.setImageResource(keyboradImage);
+							Toast.makeText(mActivity,"显示表情1", Toast.LENGTH_SHORT).show();
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
+							Toast.makeText(mActivity,"显示表情2", Toast.LENGTH_SHORT).show();
 						}
 					}
 				}
