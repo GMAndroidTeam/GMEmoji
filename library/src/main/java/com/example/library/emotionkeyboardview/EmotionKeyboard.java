@@ -32,10 +32,12 @@ public class EmotionKeyboard {
 	    private InputMethodManager mInputManager;//软键盘管理类
 	    private SharedPreferences sp;
 	    private View mEmotionLayout;//表情布局
-	    private EditText mEditText;//
+	    private EditText mEditText;//输入框
 	    private View mContentView;//内容布局view,即除了表情布局或者软键盘布局以外的布局，用于固定bar的高度，防止跳闪
 
+
 		public boolean isInputMethodOpen = false;//软件盘是否打开
+		private OnEditContentTouchListener mOnEditContentTouchListener;
 	    private EmotionKeyboard(){
 
 	    }
@@ -76,8 +78,10 @@ public class EmotionKeyboard {
 	                if (event.getAction() == MotionEvent.ACTION_UP && mEmotionLayout.isShown()) {
 	                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
 	                    hideEmotionLayout(true);//隐藏表情布局，显示软件盘
-
-	                    //软件盘显示后，释放内容高度
+						if (mOnEditContentTouchListener != null){
+							mOnEditContentTouchListener.onEditContentTouch();
+						}
+						//软件盘显示后，释放内容高度
 	                    mEditText.postDelayed(new Runnable() {
 	                        @Override
 	                        public void run() {
@@ -135,15 +139,24 @@ public class EmotionKeyboard {
 	        return this;
 	    }
 
-	    public EmotionKeyboard build(){
-	        //设置软件盘的模式：SOFT_INPUT_ADJUST_RESIZE  这个属性表示Activity的主窗口总是会被调整大小，从而保证软键盘显示空间。
-	        //从而方便我们计算软件盘的高度
-	        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
-	                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-	        //隐藏软件盘
-	        hideSoftInput();
-	        return this;
-	    }
+	    public interface OnEditContentTouchListener{
+			void onEditContentTouch();
+		}
+
+		public void setOnEditContentTouchListener(OnEditContentTouchListener onEditContentTouchListener) {
+			mOnEditContentTouchListener = onEditContentTouchListener;
+		}
+
+
+		public EmotionKeyboard build(){
+				//设置软件盘的模式：SOFT_INPUT_ADJUST_RESIZE  这个属性表示Activity的主窗口总是会被调整大小，从而保证软键盘显示空间。
+				//从而方便我们计算软件盘的高度
+				mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN |
+						WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+				//隐藏软件盘
+				hideSoftInput();
+				return this;
+			}
 
 	    /**
 	     * 点击返回键时先隐藏表情布局
@@ -178,6 +191,7 @@ public class EmotionKeyboard {
 	            if (showSoftInput) {
 	                showSoftInput();
 					isInputMethodOpen = true;
+					return;
 	            }
 				isInputMethodOpen = false;
 			}
