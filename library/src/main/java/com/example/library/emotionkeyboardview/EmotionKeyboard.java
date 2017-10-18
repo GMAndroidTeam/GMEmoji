@@ -75,12 +75,12 @@ public class EmotionKeyboard {
 	        mEditText.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 	            public boolean onTouch(View v, MotionEvent event) {
+					if (mOnEditContentTouchListener != null){
+						mOnEditContentTouchListener.onEditContentTouch();
+					}
 	                if (event.getAction() == MotionEvent.ACTION_UP && mEmotionLayout.isShown()) {
 	                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
 	                    hideEmotionLayout(true);//隐藏表情布局，显示软件盘
-						if (mOnEditContentTouchListener != null){
-							mOnEditContentTouchListener.onEditContentTouch();
-						}
 						//软件盘显示后，释放内容高度
 	                    mEditText.postDelayed(new Runnable() {
 	                        @Override
