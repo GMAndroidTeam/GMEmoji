@@ -38,6 +38,7 @@ public class EmotionKeyboard {
 
 		public boolean isInputMethodOpen = false;//软件盘是否打开
 		private OnEditContentTouchListener mOnEditContentTouchListener;
+		private OnEmojiImageClickListener mOnEmojiImageClickListener;
 	    private EmotionKeyboard(){
 
 	    }
@@ -75,6 +76,7 @@ public class EmotionKeyboard {
 	        mEditText.setOnTouchListener(new View.OnTouchListener() {
 	            @Override
 	            public boolean onTouch(View v, MotionEvent event) {
+					isInputMethodOpen = true;
 					if (mOnEditContentTouchListener != null){
 						mOnEditContentTouchListener.onEditContentTouch();
 					}
@@ -121,6 +123,9 @@ public class EmotionKeyboard {
 						} else {
 							showEmotionLayout();//两者都没显示，直接显示表情布局
 							emotionButton.setImageResource(keyboradImage);
+							if (mOnEmojiImageClickListener != null){
+								mOnEmojiImageClickListener.onEmojiImageClick();
+							}
 //							Toast.makeText(mActivity,"显示表情2", Toast.LENGTH_SHORT).show();
 						}
 					}
@@ -141,6 +146,14 @@ public class EmotionKeyboard {
 
 	    public interface OnEditContentTouchListener{
 			void onEditContentTouch();
+		}
+
+		public interface OnEmojiImageClickListener{
+			void onEmojiImageClick();
+		}
+
+		public void setOnEmojiImageClickListener(OnEmojiImageClickListener onEmojiImageClickListener) {
+			mOnEmojiImageClickListener = onEmojiImageClickListener;
 		}
 
 		public void setOnEditContentTouchListener(OnEditContentTouchListener onEditContentTouchListener) {
