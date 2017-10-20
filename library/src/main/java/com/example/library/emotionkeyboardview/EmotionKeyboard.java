@@ -63,6 +63,13 @@ public class EmotionKeyboard {
 	     */
 	    public EmotionKeyboard bindToContent(View contentView) {
 	        mContentView = contentView;
+			mContentView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					hideSoftInput();
+					hideEmotionLayout(false);
+				}
+			});
 	        return this;
 	    }
 	    
