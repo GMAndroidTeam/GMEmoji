@@ -63,13 +63,6 @@ public class EmotionKeyboard {
 	     */
 	    public EmotionKeyboard bindToContent(View contentView) {
 	        mContentView = contentView;
-			mContentView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					hideSoftInput();
-					hideEmotionLayout(false);
-				}
-			});
 	        return this;
 	    }
 	    
@@ -88,7 +81,7 @@ public class EmotionKeyboard {
 						mOnEditContentTouchListener.onEditContentTouch();
 					}
 	                if (event.getAction() == MotionEvent.ACTION_UP && mEmotionLayout.isShown()) {
-	                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
+	                    lockContentHeight(); //显示软件盘时，锁定内容高度，防止跳闪。
 	                    hideEmotionLayout(true);//隐藏表情布局，显示软件盘
 						//软件盘显示后，释放内容高度
 	                    mEditText.postDelayed(new Runnable() {

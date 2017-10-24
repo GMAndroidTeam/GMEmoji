@@ -63,7 +63,6 @@ public class GlobalOnItemClickManagerUtils {
                         // 特殊文字处理,将表情等转换一下
                         mEditText.setText(SpanStringUtils.getEmotionContent(emotion_map_type,
                                 mContext, mEditText, sb.toString()));
-
                         // 将光标设置到新增完表情的右侧
                         mEditText.setSelection(curPosition + emotionName.length());
                     }
