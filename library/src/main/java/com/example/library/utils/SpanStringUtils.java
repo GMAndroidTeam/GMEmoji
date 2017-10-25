@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.style.DynamicDrawableSpan;
 import android.widget.TextView;
 
 import com.example.library.view.CenterAlignImageSpan;
@@ -44,9 +45,9 @@ public class SpanStringUtils {
 				int size = (int) tv.getTextSize() * 11 / 10;
 
 				Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
-				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
+				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size * 12 / 10, size, true);
 
-				CenterAlignImageSpan span = new CenterAlignImageSpan(context, scaleBitmap);
+				CenterAlignImageSpan span = new CenterAlignImageSpan(context, scaleBitmap, DynamicDrawableSpan.ALIGN_BASELINE);
 				spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}
