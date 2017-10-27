@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.example.library.R;
+import com.example.library.fragment.EmotiomComplateFragment;
 import com.example.library.utils.EmotionUtils;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// +1 最后一个为删除按钮
-		return emotionNames.size() + 1;
+		// 每一页最多放27个表情,1个回退按钮故return 28
+		return EmotiomComplateFragment.EMOJI_SIZE + 1;
 	}
 
 	@Override
@@ -66,7 +68,12 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 			viewHolder.iv_emoji.setImageResource(R.drawable.compose_emotion_delete);
 		} else {
 			String emotionName = emotionNames.get(position);
-			viewHolder.iv_emoji.setImageResource(EmotionUtils.getImgByName(emotion_map_type, emotionName));
+			if (EmotionUtils.getImgByName(emotion_map_type, emotionName) == -1){
+				// 为-1说明没匹配到对应的表情图片, 说明该位置为我们自己填充的空数据,则显示一个透明色占位即可
+				viewHolder.iv_emoji.setImageResource(R.color.transparent);
+			}else {
+				viewHolder.iv_emoji.setImageResource(EmotionUtils.getImgByName(emotion_map_type, emotionName));
+			}
 		}
 
 		return convertView;

@@ -18,6 +18,8 @@
 
         <color name="bg_indicator_point_normal">#CCCCCC</color>
         <color name="bg_indicator_point_selected">#999999</color>
+        <color name="transparent">#00FFFFFF</color>
+
 
 
 </resources>

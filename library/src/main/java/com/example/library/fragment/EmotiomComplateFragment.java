@@ -31,6 +31,8 @@ public class EmotiomComplateFragment extends BaseFragment {
     private EmojiIndicatorView  ll_point_group;//表情面板对应的点列表
     private int                 emotion_map_type;
 
+    public static final int EMOJI_SIZE = 27;//每一页放27个表情
+
     /**
      * 创建与Fragment对象关联的View视图时调用
      *
@@ -99,8 +101,8 @@ public class EmotiomComplateFragment extends BaseFragment {
         // 遍历所有的表情的key
         for (String emojiName : EmotionUtils.getEmojiMap(emotion_map_type).keySet()) {
             emotionNames.add(emojiName);
-            // 每20个表情作为一组,同时添加到ViewPager对应的view集合中
-            if (emotionNames.size() == 27) {
+            // 每27个表情作为一组,同时添加到ViewPager对应的view集合中
+            if (emotionNames.size() == EMOJI_SIZE) {
                 GridView gv = createEmotionGridView(emotionNames, verticalSpacing);
                 emotionViews.add(gv);
                 // 添加完一组表情,重新创建一个表情名字集合
@@ -135,12 +137,20 @@ public class EmotiomComplateFragment extends BaseFragment {
         gv.setSelector(android.R.color.transparent);
         //设置7列
         gv.setNumColumns(7);
-        gv.setPadding(0, DisplayUtils.dp2px(getActivity(), 24), 0, DisplayUtils.dp2px(getActivity(), 11));
+        gv.setPadding(DisplayUtils.dp2px(getActivity(), 15), DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 15), DisplayUtils.dp2px(getActivity(), 11));
 //        gv.setHorizontalSpacing(horizontalSpacing);
         gv.setVerticalSpacing(verticalSpacing);
         //设置GridView的宽高
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         gv.setLayoutParams(params);
+        int emotionNameSize = emotionNames.size();
+        if (emotionNameSize < EMOJI_SIZE){
+            // 如果表情有不足27个的情况,则填满27个为止
+            for (int i = 0; i < EMOJI_SIZE - emotionNameSize; i++){
+                emotionNames.add("");
+            }
+        }
+
         // 给GridView设置表情图片
         EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type);
         gv.setAdapter(adapter);

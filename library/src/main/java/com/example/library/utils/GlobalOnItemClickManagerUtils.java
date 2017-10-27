@@ -1,6 +1,7 @@
 package com.example.library.utils;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -55,6 +56,9 @@ public class GlobalOnItemClickManagerUtils {
                         // 如果点击了表情,则添加到输入框中
                         String emotionName = emotionGvAdapter.getItem(position);
 
+                        if (TextUtils.isEmpty(emotionName)){
+                            return;
+                        }
                         // 获取当前光标位置,在指定位置上添加表情图片文本
                         int curPosition = mEditText.getSelectionStart();
                         StringBuilder sb = new StringBuilder(mEditText.getText().toString());

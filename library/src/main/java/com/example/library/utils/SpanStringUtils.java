@@ -40,7 +40,8 @@ public class SpanStringUtils {
 			int start = matcherEmotion.start();
 			// 利用表情名字获取到对应的图片
 			Integer imgRes = EmotionUtils.getImgByName(emotion_map_type,key);
-			if (imgRes != null) {
+
+			if (imgRes != null && imgRes != -1) {
 				// 压缩表情图片
 				int size = (int) tv.getTextSize() * 11 / 10;
 
