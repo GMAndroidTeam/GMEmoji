@@ -43,10 +43,10 @@ public class SpanStringUtils {
 
 			if (imgRes != null && imgRes != -1) {
 				// 压缩表情图片
-				int size = (int) tv.getTextSize() * 11 / 10;
+				int size = (int) tv.getTextSize() * 12 / 10;
 
 				Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
-				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size * 12 / 10, size, true);
+				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
 
 				CenterAlignImageSpan span = new CenterAlignImageSpan(context, scaleBitmap, DynamicDrawableSpan.ALIGN_BASELINE);
 				spannableString.setSpan(span, start, start + key.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
