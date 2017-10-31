@@ -203,7 +203,6 @@ public class EmotionKeyboard {
 	            mEmotionLayout.setVisibility(View.GONE);
 	            if (showSoftInput) {
 	                showSoftInput();
-					isInputMethodOpen = true;
 					return;
 	            }
 				isInputMethodOpen = false;
@@ -235,7 +234,8 @@ public class EmotionKeyboard {
 	     * 编辑框获取焦点，并显示软件盘
 	     */
 	    private void showSoftInput() {
-	        mEditText.requestFocus();
+			isInputMethodOpen = true;
+			mEditText.requestFocus();
 	        mEditText.post(new Runnable() {
 				@Override
 				public void run() {
@@ -248,6 +248,7 @@ public class EmotionKeyboard {
 	     * 隐藏软件盘
 	     */
 	    private void hideSoftInput() {
+			isInputMethodOpen = false;
 	        mInputManager.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
 	    }
 
