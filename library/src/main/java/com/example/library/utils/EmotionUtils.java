@@ -39,7 +39,7 @@ public class EmotionUtils {
 		EMOTION_CLASSIC_MAP.put("[可爱]", R.drawable.emoji_1f60a);
 		EMOTION_CLASSIC_MAP.put("[色]", R.drawable.emoji_1f60d);
 		EMOTION_CLASSIC_MAP.put("[大快朵颐]", R.drawable.emoji_1f60b);
-		EMOTION_CLASSIC_MAP.put("[扎眼]", R.drawable.emoji_1f609);
+		EMOTION_CLASSIC_MAP.put("[眨眼]", R.drawable.emoji_1f609);
 		EMOTION_CLASSIC_MAP.put("[困惑]", R.drawable.emoji_1f616);
 		EMOTION_CLASSIC_MAP.put("[轻松]", R.drawable.emoji_1f60c);
 		EMOTION_CLASSIC_MAP.put("[哭脸]", R.drawable.emoji_1f622);
@@ -63,7 +63,7 @@ public class EmotionUtils {
 		EMOTION_CLASSIC_MAP.put("[痛哭]", R.drawable.emoji_1f62b);
 		EMOTION_CLASSIC_MAP.put("[惊悚]", R.drawable.emoji_1f631);
 		EMOTION_CLASSIC_MAP.put("[害怕]", R.drawable.emoji_1f628);
-		EMOTION_CLASSIC_MAP.put("[哭了]", R.drawable.emoji_1f62a);
+		EMOTION_CLASSIC_MAP.put("[困了]", R.drawable.emoji_1f62a);
 		EMOTION_CLASSIC_MAP.put("[大哭]", R.drawable.emoji_1f62d);
 		EMOTION_CLASSIC_MAP.put("[吃惊]", R.drawable.emoji_1f632);
 		EMOTION_CLASSIC_MAP.put("[坚强]", R.drawable.emoji_1f623);
