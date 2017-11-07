@@ -150,9 +150,8 @@ public class EmotiomComplateFragment extends BaseFragment {
                 emotionNames.add("");
             }
         }
-        int emojiSize = (gv.getLayoutParams().height - 3 * verticalSpacing) / 4;
         // 给GridView设置表情图片
-        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type, emojiSize);
+        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type);
         gv.setAdapter(adapter);
         //设置全局点击事件
         gv.setOnItemClickListener(GlobalOnItemClickManagerUtils.getInstance(getActivity()).getOnItemClickListener(emotion_map_type));

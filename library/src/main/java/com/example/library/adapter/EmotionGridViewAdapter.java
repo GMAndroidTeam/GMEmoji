@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.example.library.R;
 import com.example.library.fragment.EmotiomComplateFragment;
+import com.example.library.utils.DisplayUtils;
 import com.example.library.utils.EmotionUtils;
 
 import java.util.List;
@@ -26,13 +27,11 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 	private Context      context;
 	private List<String> emotionNames;
 	private int          emotion_map_type;
-	private int 	     emojiSize;
 
-	public EmotionGridViewAdapter(Context context, List<String> emotionNames,int emotion_map_type, int emojiSize) {
+	public EmotionGridViewAdapter(Context context, List<String> emotionNames,int emotion_map_type) {
 		this.context = context;
 		this.emotionNames = emotionNames;
 		this.emotion_map_type = emotion_map_type;
-		this.emojiSize = emojiSize;
 	}
 
 	@Override
@@ -62,9 +61,6 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(this.context).inflate(R.layout.griditem_emoji, null);
 
 			viewHolder.iv_emoji = (ImageView) convertView.findViewById(R.id.iv_emoji);
-			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(emojiSize, emojiSize);
-			layoutParams.gravity = Gravity.CENTER;
-			viewHolder.iv_emoji.setLayoutParams(layoutParams);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -72,7 +68,12 @@ public class EmotionGridViewAdapter extends BaseAdapter {
 
 		//判断是否为最后一个item
 		if (position == getCount() - 1) {
+			//最后一个item为删除键宽高要单独设置
 			viewHolder.iv_emoji.setImageResource(R.drawable.compose_emotion_delete);
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(DisplayUtils.dp2px(context, 26), DisplayUtils.dp2px(context, 24));
+			layoutParams.setMargins(0, DisplayUtils.dp2px(context, 4), 0 ,0);
+			layoutParams.gravity = Gravity.CENTER;
+			viewHolder.iv_emoji.setLayoutParams(layoutParams);
 		} else {
 			String emotionName = emotionNames.get(position);
 			if (EmotionUtils.getImgByName(emotion_map_type, emotionName) == -1){
