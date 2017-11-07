@@ -95,7 +95,7 @@ public class EmotiomComplateFragment extends BaseFragment {
      */
     private void initEmotion() {
         // item的上下间距
-        int verticalSpacing = DisplayUtils.dp2px(getActivity(), 30);
+        int verticalSpacing = DisplayUtils.dp2px(getActivity(), 21);
         List<GridView> emotionViews = new ArrayList<>();
         List<String> emotionNames = new ArrayList<>();
         // 遍历所有的表情的key
@@ -137,7 +137,7 @@ public class EmotiomComplateFragment extends BaseFragment {
         gv.setSelector(android.R.color.transparent);
         //设置7列
         gv.setNumColumns(7);
-        gv.setPadding(DisplayUtils.dp2px(getActivity(), 15), DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 15), DisplayUtils.dp2px(getActivity(), 11));
+        gv.setPadding(DisplayUtils.dp2px(getActivity(), 15), DisplayUtils.dp2px(getActivity(), 24), DisplayUtils.dp2px(getActivity(), 15), 0);
 //        gv.setHorizontalSpacing(horizontalSpacing);
         gv.setVerticalSpacing(verticalSpacing);
         //设置GridView的宽高
@@ -150,9 +150,9 @@ public class EmotiomComplateFragment extends BaseFragment {
                 emotionNames.add("");
             }
         }
-
+        int emojiSize = (gv.getLayoutParams().height - 3 * verticalSpacing) / 4;
         // 给GridView设置表情图片
-        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type);
+        EmotionGridViewAdapter adapter = new EmotionGridViewAdapter(getActivity(), emotionNames, emotion_map_type, emojiSize);
         gv.setAdapter(adapter);
         //设置全局点击事件
         gv.setOnItemClickListener(GlobalOnItemClickManagerUtils.getInstance(getActivity()).getOnItemClickListener(emotion_map_type));
