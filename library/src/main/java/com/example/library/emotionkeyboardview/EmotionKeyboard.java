@@ -81,15 +81,10 @@ public class EmotionKeyboard {
                     mOnEditContentTouchListener.onEditContentTouch();
                 }
                 if (event.getAction() == MotionEvent.ACTION_UP && mEmotionLayout.isShown()) {
-//                    lockContentHeight(); //显示软件盘时，锁定内容高度，防止跳闪。
+                    lockContentHeight(); //显示软件盘时，锁定内容高度，防止跳闪。
                     hideEmotionLayout(true);//隐藏表情布局，显示软件盘
                     //软件盘显示后，释放内容高度
-//                    mEditText.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            unlockContentHeightDelayed();
-//                        }
-//                    }, 200L);
+                    unlockContentHeightDelayed();
                 }
                 return false;
             }
@@ -109,15 +104,15 @@ public class EmotionKeyboard {
             public void onClick(View v) {
 
                 if (mEmotionLayout.isShown()) {
-//                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
+                    lockContentHeight();//显示软件盘时，锁定内容高度，防止跳闪。
                     hideEmotionLayout(true);//隐藏表情布局，显示软件盘
-//                    unlockContentHeightDelayed();//软件盘显示后，释放内容高度
+                    unlockContentHeightDelayed();//软件盘显示后，释放内容高度
                     emotionButton.setImageResource(emojiImage);
                 } else {
                     if (isSoftInputShown()) {//同上
-//                        lockContentHeight();
+                        lockContentHeight();
                         showEmotionLayout();
-//                        unlockContentHeightDelayed();
+                        unlockContentHeightDelayed();
                         emotionButton.setImageResource(keyboradImage);
                     } else {
                         showEmotionLayout();//两者都没显示，直接显示表情布局
