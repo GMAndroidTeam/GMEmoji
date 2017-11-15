@@ -1,8 +1,12 @@
 package com.example.library.emotionkeyboardview;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
+import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -147,7 +151,7 @@ public class EmotionKeyboard {
     }
 
     public interface OnGetSoftHeightListener {
-        int onGetSoftHeignt();
+        int onGetSoftHeight();
     }
 
     public void setOnEmojiImageClickListener(OnEmojiImageClickListener onEmojiImageClickListener) {
@@ -189,7 +193,7 @@ public class EmotionKeyboard {
     private void showEmotionLayout() {
         int softInputHeight = 0;
         if (null != mOnGetSoftHeightListener){
-            softInputHeight = mOnGetSoftHeightListener.onGetSoftHeignt();
+            softInputHeight = mOnGetSoftHeightListener.onGetSoftHeight();
         }
         if (softInputHeight == 0) {
             //容错处理
@@ -265,11 +269,50 @@ public class EmotionKeyboard {
      * @return
      */
     private boolean isSoftInputShown() {
-        int softHeight = 0;
-        if (null != mOnGetSoftHeightListener) {
-            softHeight = mOnGetSoftHeightListener.onGetSoftHeignt();
+        Rect r = new Rect();
+        /**
+         * decorView是window中的最顶层view，可以从window中通过getDecorView获取到decorView。
+         * 通过decorView获取到程序显示的区域，包括标题栏，但不包括状态栏。
+         */
+        mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+        //获取屏幕的高度
+        int screenHeight = mActivity.getWindow().getDecorView().getRootView().getHeight();
+        //计算软件盘的高度
+        int softInputHeight = screenHeight - r.bottom;
+
+        /**
+         * 某些Android版本下，没有显示软键盘时减出来的高度总是144，而不是零，
+         * 这是因为高度是包括了虚拟按键栏的(例如华为系列)，所以在API Level高于20时，
+         * 我们需要减去底部虚拟按键栏的高度（如果有的话）
+         */
+        if (Build.VERSION.SDK_INT >= 20) {
+            // When SDK Level >= 20 (Android L), the softInputHeight will contain the height of softButtonsBar (if has)
+            softInputHeight = softInputHeight - getSoftButtonsBarHeight();
         }
-        return softHeight != 0;
+
+        return softInputHeight != 0;
+
+
+    }
+
+    /**
+     * 底部虚拟按键栏的高度
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private int getSoftButtonsBarHeight() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        //这个方法获取可能不是真实屏幕的高度
+        mActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int usableHeight = metrics.heightPixels;
+        //获取当前屏幕的真实高度
+        mActivity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+        int realHeight = metrics.heightPixels;
+        if (realHeight > usableHeight) {
+            return realHeight - usableHeight;
+        } else {
+            return 0;
+        }
     }
 
     /**
