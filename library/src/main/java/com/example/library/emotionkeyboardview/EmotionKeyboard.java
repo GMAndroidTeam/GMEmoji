@@ -202,8 +202,12 @@ public class EmotionKeyboard {
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;
         mEmotionLayout.setVisibility(View.VISIBLE);
-        mEditText.setFocusableInTouchMode(true);
-        mEditText.requestFocus();
+        mEditText.post(new Runnable() {
+            @Override
+            public void run() {
+                mEditText.requestFocus();
+            }
+        });
     }
 
     /**
