@@ -199,11 +199,7 @@ public class EmotionKeyboard {
         }
         //如果是登录过的用户是进入不到登录页的，所以取不到键盘高度，所以还需要重新获取
         if (softInputHeight == 0) {
-            softInputHeight = getSupportSoftInputHeight();
-            //容错处理。如果还是取不到高度只能给一个定值
-            if (softInputHeight == 0) {
-                softInputHeight = getKeyBoardHeight();
-            }
+            softInputHeight = getKeyBoardHeight();
         }
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;
@@ -346,7 +342,18 @@ public class EmotionKeyboard {
      * @return
      */
     public int getKeyBoardHeight() {
-        return sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 787);
+        int softHeight = sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 0);
+        if (softHeight == 0){
+            int cacheHeight = getSupportSoftInputHeight();
+            if (cacheHeight == 0){
+                //容错处理。如果还是取不到高度只能给一个定值
+                return 787;
+            }else {
+                return cacheHeight;
+            }
+        }
+        return softHeight;
+//        return sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 787);
 
     }
 
