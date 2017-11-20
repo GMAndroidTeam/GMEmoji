@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -193,11 +194,16 @@ public class EmotionKeyboard {
     private void showEmotionLayout() {
         int softInputHeight = 0;
         if (null != mOnGetSoftHeightListener){
+            //先取登录时存的键盘高度
             softInputHeight = mOnGetSoftHeightListener.onGetSoftHeight();
         }
+        //如果是登录过的用户是进入不到登录页的，所以取不到键盘高度，所以还需要重新获取
         if (softInputHeight == 0) {
-            //容错处理
-            softInputHeight = getKeyBoardHeight();
+            softInputHeight = getSupportSoftInputHeight();
+            //容错处理。如果还是取不到高度只能给一个定值
+            if (softInputHeight == 0) {
+                softInputHeight = getKeyBoardHeight();
+            }
         }
         hideSoftInput();
         mEmotionLayout.getLayoutParams().height = softInputHeight;
@@ -271,10 +277,17 @@ public class EmotionKeyboard {
 
     /**
      * 是否显示软件盘
-     *
      * @return
      */
     private boolean isSoftInputShown() {
+        return getSupportSoftInputHeight() != 0;
+    }
+
+    /**
+     * 获取软件盘的高度
+     * @return
+     */
+    private int getSupportSoftInputHeight() {
         Rect r = new Rect();
         /**
          * decorView是window中的最顶层view，可以从window中通过getDecorView获取到decorView。
@@ -296,10 +309,16 @@ public class EmotionKeyboard {
             softInputHeight = softInputHeight - getSoftButtonsBarHeight();
         }
 
-        return softInputHeight != 0;
-
-
+        if (softInputHeight < 0) {
+            Log.w("gengmei", "EmotionKeyboard--Warning: value of softInputHeight is below zero!");
+        }
+        //存一份到本地
+        if (softInputHeight > 0) {
+            sp.edit().putInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, softInputHeight).apply();
+        }
+        return softInputHeight;
     }
+
 
     /**
      * 底部虚拟按键栏的高度
