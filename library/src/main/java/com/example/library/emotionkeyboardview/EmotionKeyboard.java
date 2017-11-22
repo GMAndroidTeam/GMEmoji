@@ -348,8 +348,6 @@ public class EmotionKeyboard {
             if (cacheHeight == 0){
                 //容错处理。如果还是取不到高度只能给一个定值
                 return 787;
-            }else {
-                return cacheHeight;
             }
         }
         return softHeight;
