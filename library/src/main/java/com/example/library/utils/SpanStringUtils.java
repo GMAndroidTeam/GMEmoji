@@ -43,7 +43,7 @@ public class SpanStringUtils {
 
 			if (imgRes != null && imgRes != -1) {
 				// 压缩表情图片
-				int size = (int) tv.getTextSize() * 12 / 10;
+				int size = (int) tv.getTextSize() * 13 / 10;
 
 				Bitmap bitmap = BitmapFactory.decodeResource(res, imgRes);
 				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bitmap, size, size, true);
