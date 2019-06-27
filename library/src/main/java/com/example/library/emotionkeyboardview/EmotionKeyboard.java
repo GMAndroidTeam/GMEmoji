@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -25,21 +26,23 @@ import android.widget.LinearLayout;
  */
 public class EmotionKeyboard {
 
-    private static final String SHARE_PREFERENCE_NAME              = "EmotionKeyboard";
+    private static final String SHARE_PREFERENCE_NAME = "EmotionKeyboard";
     private static final String SHARE_PREFERENCE_SOFT_INPUT_HEIGHT = "soft_input_height";
 
-    private Activity           mActivity;
+    private Activity mActivity;
     private InputMethodManager mInputManager;//软键盘管理类
-    private SharedPreferences  sp;
-    private View               mEmotionLayout;//表情布局
-    private EditText           mEditText;//输入框
-    private View               mContentView;//内容布局view,即除了表情布局或者软键盘布局以外的布局，用于固定bar的高度，防止跳闪
+    private SharedPreferences sp;
+    private View mEmotionLayout;//表情布局
+    private EditText mEditText;//输入框
+    private View mContentView;//内容布局view,即除了表情布局或者软键盘布局以外的布局，用于固定bar的高度，防止跳闪
 
 
     public boolean isInputMethodOpen = false;//软件盘是否打开
     private OnEditContentTouchListener mOnEditContentTouchListener;
-    private OnEmojiImageClickListener  mOnEmojiImageClickListener;
-    private OnGetSoftHeightListener    mOnGetSoftHeightListener;
+    private OnEmojiImageClickListener mOnEmojiImageClickListener;
+    private OnGetSoftHeightListener mOnGetSoftHeightListener;
+    private int mSoftInputHeight = 0;
+    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
 
     private EmotionKeyboard() {
 
@@ -193,12 +196,12 @@ public class EmotionKeyboard {
 
     private void showEmotionLayout() {
         int softInputHeight = 0;
-        if (null != mOnGetSoftHeightListener){
+        if (null != mOnGetSoftHeightListener) {
             //先取登录时存的键盘高度
             softInputHeight = mOnGetSoftHeightListener.onGetSoftHeight();
         }
         //如果是登录过的用户是进入不到登录页的，所以取不到键盘高度，所以还需要重新获取
-        if (softInputHeight == 0) {
+        if (softInputHeight <= 0) {
             softInputHeight = getKeyBoardHeight();
         }
         hideSoftInput();
@@ -245,6 +248,7 @@ public class EmotionKeyboard {
             @Override
             public void run() {
                 ((LinearLayout.LayoutParams) mContentView.getLayoutParams()).weight = 1.0F;
+                mContentView.requestLayout();
             }
         }, 200L);
     }
@@ -255,12 +259,35 @@ public class EmotionKeyboard {
     public void showSoftInput() {
         isInputMethodOpen = true;
         mEditText.requestFocus();
+        setOnGlobalLayoutListener();
         mEditText.post(new Runnable() {
             @Override
             public void run() {
                 mInputManager.showSoftInput(mEditText, 0);
             }
         });
+    }
+
+    private void setOnGlobalLayoutListener() {
+        if (mSoftInputHeight <= 0) {
+            if(mOnGlobalLayoutListener==null){
+                mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        int supportSoftInputHeight = getSupportSoftInputHeight();
+                        if (supportSoftInputHeight != 787) {
+                            mSoftInputHeight = supportSoftInputHeight;
+                        }
+                        if (mSoftInputHeight != 0) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                mActivity.getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
+                            }
+                        }
+                    }
+                };
+            }
+            mActivity.getWindow().getDecorView().getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
+        }
     }
 
     /**
@@ -273,14 +300,16 @@ public class EmotionKeyboard {
 
     /**
      * 是否显示软件盘
+     *
      * @return
      */
     private boolean isSoftInputShown() {
-        return getSupportSoftInputHeight() != 0;
+        return getSupportSoftInputHeight() > 0;
     }
 
     /**
      * 获取软件盘的高度
+     *
      * @return
      */
     private int getSupportSoftInputHeight() {
@@ -318,6 +347,7 @@ public class EmotionKeyboard {
 
     /**
      * 底部虚拟按键栏的高度
+     *
      * @return
      */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -329,11 +359,23 @@ public class EmotionKeyboard {
         //获取当前屏幕的真实高度
         mActivity.getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         int realHeight = metrics.heightPixels;
-        if (realHeight > usableHeight) {
-            return realHeight - usableHeight;
+        int statusBarHeight = getStatusBarHeight();
+        mActivity.getWindow().getDecorView().getHeight();
+        int navigationBarHeight = realHeight - usableHeight - statusBarHeight;
+        if (navigationBarHeight > 0) {
+            return navigationBarHeight;
         } else {
             return 0;
         }
+    }
+
+    private int getStatusBarHeight() {
+        int height = 0;
+        int resourceId = mActivity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            height = mActivity.getResources().getDimensionPixelSize(resourceId);
+        }
+        return height;
     }
 
     /**
@@ -342,13 +384,17 @@ public class EmotionKeyboard {
      * @return
      */
     public int getKeyBoardHeight() {
+        if (mSoftInputHeight > 0) {
+            return mSoftInputHeight;
+        }
         int softHeight = sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 0);
-        if (softHeight == 0){
+        if (softHeight <= 0) {
             int cacheHeight = getSupportSoftInputHeight();
-            if (cacheHeight == 0){
+            if (cacheHeight <= 0) {
                 //容错处理。如果还是取不到高度只能给一个定值
                 return 787;
             }
+            softHeight = cacheHeight;
         }
         return softHeight;
 //        return sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 787);
