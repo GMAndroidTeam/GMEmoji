@@ -4,18 +4,26 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.example.library.utils.MobileBrandUtils;
 
 /**
  * author : zejian
@@ -43,6 +51,10 @@ public class EmotionKeyboard {
     private OnGetSoftHeightListener mOnGetSoftHeightListener;
     private int mSoftInputHeight = 0;
     private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
+    private int minSoftHeight =187;
+    //获取软键盘高度，由于第一次直接弹出表情时会出现小问题，787是一个均值，作为临时解决方案
+    private int firstDefaultSoftHeight = 787;
+
 
     private EmotionKeyboard() {
 
@@ -177,6 +189,7 @@ public class EmotionKeyboard {
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         //隐藏软件盘
         hideSoftInput();
+        minSoftHeight = getSoftButtonsBarHeight() + (int)(getStatusBarHeight()*2.5f);
         return this;
     }
 
@@ -269,16 +282,16 @@ public class EmotionKeyboard {
     }
 
     private void setOnGlobalLayoutListener() {
-        if (mSoftInputHeight <= 0) {
+        if (mSoftInputHeight <= minSoftHeight) {
             if(mOnGlobalLayoutListener==null){
                 mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         int supportSoftInputHeight = getSupportSoftInputHeight();
-                        if (supportSoftInputHeight != 787) {
+                        if (supportSoftInputHeight > minSoftHeight && supportSoftInputHeight != firstDefaultSoftHeight) {
                             mSoftInputHeight = supportSoftInputHeight;
                         }
-                        if (mSoftInputHeight != 0) {
+                        if (mSoftInputHeight > minSoftHeight) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                                 mActivity.getWindow().getDecorView().getViewTreeObserver().removeOnGlobalLayoutListener(mOnGlobalLayoutListener);
                             }
@@ -304,7 +317,7 @@ public class EmotionKeyboard {
      * @return
      */
     private boolean isSoftInputShown() {
-        return getSupportSoftInputHeight() > 0;
+        return getSupportSoftInputHeight() > minSoftHeight;
     }
 
     /**
@@ -338,7 +351,7 @@ public class EmotionKeyboard {
             Log.w("gengmei", "EmotionKeyboard--Warning: value of softInputHeight is below zero!");
         }
         //存一份到本地
-        if (softInputHeight > 0) {
+        if (softInputHeight > minSoftHeight) {
             sp.edit().putInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, softInputHeight).apply();
         }
         return softInputHeight;
@@ -361,7 +374,15 @@ public class EmotionKeyboard {
         int realHeight = metrics.heightPixels;
         int statusBarHeight = getStatusBarHeight();
         mActivity.getWindow().getDecorView().getHeight();
-        int navigationBarHeight = realHeight - usableHeight - statusBarHeight;
+        int navigationBarHeight = realHeight - usableHeight;
+        if(MobileBrandUtils.getRomType() == MobileBrandUtils.ROM_TYPE.EMUI){
+            navigationBarHeight = navigationBarHeight - statusBarHeight;
+        }else if(MobileBrandUtils.getRomType() == MobileBrandUtils.ROM_TYPE.MIUI){
+            if(Settings.Global.getInt(mActivity.getContentResolver(), "force_fsg_nav_bar", 0) != 0){
+                //开启手势，不显示虚拟键
+                return 0;
+            }
+        }
         if (navigationBarHeight > 0) {
             return navigationBarHeight;
         } else {
@@ -384,21 +405,40 @@ public class EmotionKeyboard {
      * @return
      */
     public int getKeyBoardHeight() {
-        if (mSoftInputHeight > 0) {
+        if (mSoftInputHeight > minSoftHeight) {
             return mSoftInputHeight;
         }
         int softHeight = sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 0);
-        if (softHeight <= 0) {
+        if (softHeight <= minSoftHeight) {
             int cacheHeight = getSupportSoftInputHeight();
-            if (cacheHeight <= 0) {
+            if (cacheHeight <= minSoftHeight) {
                 //容错处理。如果还是取不到高度只能给一个定值
-                return 787;
+                return firstDefaultSoftHeight;
             }
             softHeight = cacheHeight;
         }
         return softHeight;
 //        return sp.getInt(SHARE_PREFERENCE_SOFT_INPUT_HEIGHT, 787);
 
+    }
+
+    public boolean isNavigationBarShow(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            Display display = mActivity.getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            Point realSize = new Point();
+            display.getSize(size);
+            display.getRealSize(realSize);
+            return realSize.y!=size.y;
+        }else {
+            boolean menu = ViewConfiguration.get(mActivity).hasPermanentMenuKey();
+            boolean back = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
+            if(menu || back) {
+                return false;
+            }else {
+                return true;
+            }
+        }
     }
 
 }
