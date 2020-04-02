@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GMEmoji.iml" filepath="$PROJECT_DIR$/GMEmoji.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/GMEmoji-app.iml" filepath="$PROJECT_DIR$/app/GMEmoji-app.iml" group="GMEmoji/app" />
+      <module fileurl="file://$PROJECT_DIR$/library/GMEmoji-library.iml" filepath="$PROJECT_DIR$/library/GMEmoji-library.iml" group="GMEmoji/library" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
+      <module fileurl="file://$PROJECT_DIR$/workspace-GMEmoji.iml" filepath="$PROJECT_DIR$/workspace-GMEmoji.iml" group="GMEmoji" />
     </modules>
   </component>
 </project>
